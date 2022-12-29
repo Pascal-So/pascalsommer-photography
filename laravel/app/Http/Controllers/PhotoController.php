@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Photo;
-use App\Post;
 use App\Tag;
 use App\Rules\NoHTML;
 use Illuminate\Support\Str;

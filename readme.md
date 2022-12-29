@@ -28,8 +28,10 @@ cd laravel/tools/generate-icons
 cargo run
 
 # Update php dependencies
-sudo docker run --rm -it --name blog-composer -v $PWD/laravel:/app/ prooph/composer:7.4 update
+sudo docker run --rm -it --name blog-composer -v $PWD/laravel:/app/ composer update
 ```
+
+At this point you might have to run `compser dump-autoload` on the server, or if php7 is still the default on hostpoint then `/usr/local/php81/bin/composer dump-autoload`.
 
 ## Front-End
 

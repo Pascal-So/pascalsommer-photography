@@ -14,6 +14,12 @@ return [
              */
             'items' => 'App\Post@getFeedItems',
 
+            'image' => '',
+
+            'format' => 'atom',
+
+            'contentType' => '',
+
             /*
              * The feed will be available on this url.
              */

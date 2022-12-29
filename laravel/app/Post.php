@@ -22,7 +22,7 @@ class Post extends Model implements Feedable
             ->summary($this->rssSummary())
             ->updated($this->created_at ?: new \Carbon\Carbon($this->date))
             ->link($this->permalink())
-            ->author('Pascal Sommer');
+            ->authorName('Pascal Sommer');
     }
 
     public function getFeedItems()
