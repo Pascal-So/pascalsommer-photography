@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function(){
         ->name('deletePost');
 });
 
+Route::get('/search/{terms?}', 'PhotoController@search')
+    ->name('search');
 
 /*
 |  Comment Routes

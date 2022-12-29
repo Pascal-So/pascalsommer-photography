@@ -13,5 +13,5 @@ let mix = require('laravel-mix');
 
 mix.setPublicPath('..');
 
-mix.js('resources/js/admin.js', 'js').vue();
-mix.sass('resources/sass/pascal.scss', 'css');
+mix.js('resources/js/admin.js', 'js').vue().version();
+mix.sass('resources/sass/pascal.scss', 'css').version();

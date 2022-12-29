@@ -17,6 +17,21 @@ class PhotoController extends Controller
         return view('photo.index', compact('photos'));
     }
 
+    public function search(String $terms = '')
+    {
+        $query = Photo::published()->blogOrdered();
+        foreach (explode(' ', $terms) as $term) {
+            $matcher = "%{$term}%";
+            $query->where(function($query) use ($matcher) {
+                $query->where('description', 'like', $matcher)
+                    ->orWhere('p.title', 'like', $matcher);
+            });
+        }
+        $count = $query->count();
+        $photos = $query->paginate(2 * 3 * 4 * 5);
+        return view('photo.search', compact('photos', 'count', 'terms'));
+    }
+
     public function view(Photo $photo)
     {
         // not logged in users aren't allowed to see unpublished photos

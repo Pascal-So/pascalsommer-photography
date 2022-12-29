@@ -20,6 +20,8 @@ function get_shortcut_handler() {
     }
 
     return function(e) {
+        // Don't activate the shortcuts if ctrl or shift is held.
+        if (e.ctrlKey || e.shiftKey) return;
 
         // Don't do anything if a textfield is in focus.
         if(document.activeElement){
