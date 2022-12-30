@@ -3,7 +3,7 @@
         @include('icons.soundcloud')
     </a><a title="Github" href="https://github.com/pascal-so" class="external-platform-link">
         @include('icons.github')
-    </a><a class="tag" style="margin-bottom: 0" href="{{ route('filtered', ['tags' => 'Favourites']) }}">
+    </a><a class="tag" style="margin-bottom: 0" href="{{ route('filtered', ['tags' => 'Favourites']) }}#start-content">
         Favourites
     </a><a class="tag" style="margin-bottom: 0" href="{{ route('search') }}">
         Search

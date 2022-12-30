@@ -1,10 +1,6 @@
 /laravel/node_modules
-/hot
-/storage
 /laravel/storage/*.key
 /laravel/vendor
-/.idea
-/.vagrant
 /laravel/npm-debug.log
 /laravel/yarn-error.log
 /laravel/.env
@@ -14,4 +10,4 @@
 /js/admin.js*
 /fonts
 
-.phpunit.result.cache
+mix-manifest.json

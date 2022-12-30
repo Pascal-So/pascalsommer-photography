@@ -4,7 +4,7 @@
         <draggable class="dragArea" v-model="post_photos" :options="{put: true, pull: true, group: 'photos'}">
             <div class="box-sortable" v-for="photo in post_photos">
                 <a :href="view_path + photo.id" target="blank">
-                    <img class="photo-sortable" :src="asset_path + photo.path">
+                    <img class="photo-sortable" :src="asset_path + photo.thumb">
                 </a>
             </div>
         </draggable>
@@ -12,7 +12,7 @@
         <draggable class="dragArea" v-model="staged_photos" :options="{handle: 'img', put: true, pull: true, group: 'photos'}">
             <div class="box-sortable" v-for="photo in staged_photos">
                 <a :href="view_path + photo.id" target="blank">
-                    <img class="photo-sortable" :src="asset_path + photo.path">
+                    <img class="photo-sortable" :src="asset_path + photo.thumb">
                 </a>
             </div>
         </draggable>

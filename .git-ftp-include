@@ -1,4 +1,5 @@
 css/:laravel/resources/
 js/admin.js*:laravel/resources/
+!mix-manifest.json
 fonts/:laravel/resources/
 laravel/resources/views/icons/:laravel/tools/generate-icons/

@@ -111,6 +111,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/photos/{photo}/delete', 'PhotoController@delete')
         ->name('deletePhoto');
+
+    Route::post('/generateThumbnails', 'PhotoController@generateThumbnails')
+        ->name('generateThumbnails');
 });
 
 Route::middleware(['auth'])->group(function(){

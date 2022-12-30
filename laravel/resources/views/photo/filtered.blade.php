@@ -52,7 +52,7 @@
 
 @foreach($photos as $photo)
     <a href="{{ $photo->url() }}" class="photolink">
-        <img class="photo" src="{{ asset($photo->path) }}" alt="{{ $photo->alttext() }}" title="{{ $photo->titletext() }}">
+        <img class="photo" src="{{ asset($photo->imgPath()) }}" alt="{{ $photo->alttext() }}" title="{{ $photo->titletext() }}">
     </a>
     <br>
 @endforeach

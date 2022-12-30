@@ -164,10 +164,11 @@ class PhotoController extends Controller
 
             $filename = $photo->storeAs(config('constants.photos_path'), $generated_name);
 
-            Photo::create([
-                'path' => $filename,
+            $photo = Photo::create([
+                'path' => pathinfo($filename)['basename'],
                 'description' => '',
             ]);
+            $photo->generateThumbnail();
         }
 
         return redirect()->route('photos');
@@ -192,5 +193,17 @@ class PhotoController extends Controller
         $photos = Photo::published()->blogOrdered()->paginate(2*3*4*5);
 
         return view('photo.gallery', compact('photos'));
+    }
+
+    public function generateThumbnails()
+    {
+        Photo::chunk(200, function($photos) {
+            foreach ($photos as $photo) {
+                if (!file_exists($photo->thumbPath())) {
+                    $photo->generateThumbnail();
+                }
+            }
+        });
+        return redirect()->route('home');
     }
 }

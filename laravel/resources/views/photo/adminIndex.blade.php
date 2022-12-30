@@ -59,7 +59,7 @@
     </div>
 
     @foreach($photos as $photo)
-        <a href="{{ asset($photo->path) }}" target="blank"><img style="vertical-align: top; max-width: 100%" src="{{ asset($photo->path) }}"></a>
+        <a href="{{ asset($photo->imgPath()) }}" target="blank"><img style="vertical-align: top; max-width: 100%" src="{{ asset($photo->thumbPath()) }}"></a>
 
         <div class="staging-view-photo-controls">
             <div class="flex-row flex-wrap">
@@ -71,7 +71,7 @@
                     View
                 </a>
 
-                <a data-deletable-photo data-filename="{{ basename($photo->path) }}"
+                <a data-deletable-photo data-filename="{{ basename($photo->imgPath()) }}"
                     @if( $photo->isPublic() )
                         data-post="{{ str_replace('"', "'", $photo->post->title) }}"
                     @endif

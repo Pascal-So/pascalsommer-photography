@@ -39,7 +39,7 @@
 
 @include('layouts.pagination_nav', ['items' => $photos, 'from_page_two' => false, 'element_id' => 'start-content'])
 <br>
-@foreach($photos as $photo)<a href="{{ $photo->url() }}"><img class="photo-gallery" src="{{ asset($photo->path) }}"></a>@endforeach
+@foreach($photos as $photo)<a href="{{ $photo->url() }}"><img class="photo-gallery" src="{{ asset($photo->thumbPath()) }}"></a>@endforeach
 
 <br>
 

@@ -18,7 +18,7 @@
     @foreach($post->photos()->blogOrdered()->get() as $photo)
         <a href="{{ $photo->url() }}" class="photolink">
             <img class="photo"
-                src="{{ asset($photo->path) }}"
+                src="{{ asset($photo->imgPath()) }}"
                 alt="{{ $photo->alttext() }}"
                 title="{{ $photo->titletext() }}"
                 id="photo_{{ $photo->id }}">

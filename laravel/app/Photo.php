@@ -124,12 +124,26 @@ class Photo extends Model implements Sortable
 
     public function width():int
     {
-        return getimagesize($this->path)[0];
+        return getimagesize($this->imgPath())[0];
     }
 
     public function height():int
     {
-        return getimagesize($this->path)[1];
+        return getimagesize($this->imgPath())[1];
+    }
+
+    public function generateThumbnail()
+    {
+        $image = imagecreatefromjpeg($this->imgPath());
+        if (!$image) {
+            throw new \Exception('image ' . $this->imgPath() . ' not found.');
+        }
+        $scaled = imagescale($image, 300);
+
+        $res = imagewebp($scaled, $this->thumbPath(), 40);
+        if (!$res) {
+            throw new \Exception('image ' . $this->thumbPath() . ' could not be saved.');
+        }
     }
 
     public function titletext():string
@@ -229,9 +243,22 @@ class Photo extends Model implements Sortable
         return route('viewPhoto', ['photo' => $this]);
     }
 
+    public function imgPath():string
+    {
+        return config('constants.photos_path') . '/' . $this->path;
+    }
+
+    public function thumbPath():string
+    {
+        $jpg = config('constants.thumbs_path') . '/' . $this->path;
+        $info = pathinfo($jpg);
+        return $info['dirname'] . '/' . $info['filename']  . '.webp';
+    }
+
     public function delete()
     {
-        Storage::delete($this->path);
+        Storage::delete($this->imgPath());
+        Storage::delete($this->thumbPath());
 
         $this->tags()->detach();
 

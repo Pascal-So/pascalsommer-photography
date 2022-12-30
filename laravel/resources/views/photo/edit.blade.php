@@ -27,7 +27,7 @@
             @include('icons.left')
         </a>
     @endif
-    <img src="{{ asset($photo->path) }}" class="photo" id="photo">
+    <img src="{{ asset($photo->imgPath()) }}" class="photo" id="photo">
     @if($photo->nextPhoto() == null)
         <span class="arrow-icon">
             @include('icons.arrow_placeholder')

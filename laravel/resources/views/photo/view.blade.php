@@ -1,6 +1,6 @@
 @extends('layouts.pascal')
 
-@section('social_image', asset($photo->path))
+@section('social_image', asset($photo->imgPath()))
 
 @section('social_description', $photo->description ?: config('constants.page_description'))
 
@@ -34,8 +34,8 @@
             @include('icons.left')
         </a>
     @endif
-    <a href="{{ asset($photo->path) }}" target="blank">
-        <img id="photo" class="photo-large" src="{{ asset($photo->path) }}" alt="{{ $photo->alttext() }}">
+    <a href="{{ asset($photo->imgPath()) }}" target="blank">
+        <img id="photo" class="photo-large" src="{{ asset($photo->imgPath()) }}" alt="{{ $photo->alttext() }}">
     </a>
     @if($photo->nextPhoto() == null)
         <span class="arrow-icon">

@@ -6,7 +6,7 @@
         $id = request()->query('meta_img');
 
         if($photo = \App\Photo::find($id)){
-            $social_image = $photo->path;
+            $social_image = $photo->imgPath();
         }
     }
 @endphp

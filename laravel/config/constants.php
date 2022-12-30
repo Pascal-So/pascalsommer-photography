@@ -2,6 +2,7 @@
 
 return [
     'photos_path' => 'img/photos',
+    'thumbs_path' => 'img/thumbs',
 
     'page_description' => 'My personal photography blog',
 

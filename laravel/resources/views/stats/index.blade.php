@@ -25,4 +25,13 @@
 
 <p><b>Reference for stuff that I tend to forget</b></p>
 <p>Hotlink syntax: #photo812#</p>
+
+<h2>Debug Tools</h2>
+
+<form action="{{ route('generateThumbnails') }}" method="POST">
+    @csrf
+
+    <button class="btn">Generate Thumbnails</button>
+</form>
+
 @endsection

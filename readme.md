@@ -11,6 +11,7 @@ cp laravel/.env{.example,}
 # Let the server write to these directories
 chmod a+w -R laravel/storage/{framework,logs}
 chmod a+w -R img/photos/
+chmod a+w -R img/thumbs/
 
 # Quickly set up a mysql server
 sudo docker run --rm -d --name blog-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=blog mysql
