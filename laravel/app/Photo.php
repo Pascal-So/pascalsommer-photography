@@ -185,12 +185,11 @@ class Photo extends Model implements Sortable
 
     public function replaceInternalLinks(string $text, string $link_options = ""):string
     {
-        $photo_ids = [];
-
-        preg_match_all("/#photo(\d+)#/", $text, $photo_ids, PREG_PATTERN_ORDER);
-
         $patterns = [];
         $replacements = [];
+
+        $photo_ids = [];
+        preg_match_all("/#photo(\d+)#/", $text, $photo_ids, PREG_PATTERN_ORDER);
         foreach ($photo_ids[1] as $match_id => $id) {
             $patterns[] = '/' . $photo_ids[0][$match_id] . '/';
 
@@ -212,7 +211,6 @@ class Photo extends Model implements Sortable
 
         $post_ids = [];
         preg_match_all('/#post(\d+)#/', $text, $post_ids, PREG_PATTERN_ORDER);
-
         foreach ($post_ids[1] as $match_id => $id) {
             $patterns[] = '/' . $post_ids[0][$match_id] . '/';
 
@@ -227,7 +225,16 @@ class Photo extends Model implements Sortable
             }
         }
 
-        //dd($replacements);
+        $coords = [];
+        // A coordinate is between 38 and 45 chars long after html entity substitution. Without
+        // substitution it would be shorter. Also, this substitution introduces hashes so we need
+        // the range here.
+        preg_match_all('/#coords(.{38,45})#/u', $text, $coords, PREG_PATTERN_ORDER);
+        foreach ($coords[1] as $match_id => $coord) {
+            $patterns[] = '/' . $coords[0][$match_id] . '/';
+            $link = 'https://www.google.com/maps/?q=' . $coord . '&=Search%20Google%20Maps';
+            $replacements[] = "<a ${link_options} href=\"" . $link . "\">{$coord}</a>";
+        }
 
         return preg_replace($patterns, $replacements, $text);
     }

@@ -23,8 +23,36 @@
 
 <br><br><br>
 
-<p><b>Reference for stuff that I tend to forget</b></p>
-<p>Hotlink syntax: #photo812#</p>
+<h2>Hotlink syntax</h2>
+<table class="inline-block">
+    <tr>
+        <td style="text-align: right">
+            Photos:
+        </td>
+        <td>&nbsp;&nbsp;</td>
+        <td style="text-align: right">
+            #photo812#
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: right">
+            Posts:
+        </td>
+        <td>&nbsp;&nbsp;</td>
+        <td style="text-align: right">
+            #post32#
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: right">
+            Coords:
+        </td>
+        <td>&nbsp;&nbsp;</td>
+        <td style="text-align: right">
+            #coords46°27'58.8"N 13°17'37.4"E#
+        </td>
+    </tr>
+</table>
 
 <h2>Debug Tools</h2>
 
