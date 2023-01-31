@@ -5,5 +5,5 @@ edition = "2018"
 
 [dependencies]
 svg = "0.9"
-nalgebra = "0.26"
+nalgebra = "0.27"
 impl_ops = "0.1"
