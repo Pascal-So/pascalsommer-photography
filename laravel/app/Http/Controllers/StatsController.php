@@ -19,7 +19,7 @@ class StatsController extends Controller
         $nr_posts = Post::count();
 
         $nr_weeks_for_stat = 13; // 3 months
-        $start_date = date('Y-m-d', strtotime("-${nr_weeks_for_stat} week"));
+        $start_date = date('Y-m-d', strtotime("-{$nr_weeks_for_stat} week"));
 
         $nr_posts_per_week = Post::where('date', '>=', $start_date)->count() / $nr_weeks_for_stat;
         $nr_photos_per_week = Photo::whereHas('post', function($query) use ($start_date) {

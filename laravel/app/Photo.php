@@ -197,15 +197,15 @@ class Photo extends Model implements Sortable
             $photo = self::find($id);
 
             if ($photo === null) {
-                Log::error("Description of photo {$this->id} links to unknown photo ${id}.");
+                Log::error("Description of photo {$this->id} links to unknown photo {$id}.");
                 $replacements[] = $photo_ids[0][$match_id];
             } elseif (! $photo->isPublic()) {
-                Log::error("Description of photo {$this->id} links to unpublished photo ${id}.");
+                Log::error("Description of photo {$this->id} links to unpublished photo {$id}.");
                 $replacements[] = $photo_ids[0][$match_id];
             } else {
-                $replacements[] = "<a ${link_options} href=\""
+                $replacements[] = "<a {$link_options} href=\""
                                 . $photo->url()
-                                . "\">${id}</a>";
+                                . "\">{$id}</a>";
             }
         }
 
@@ -218,10 +218,10 @@ class Photo extends Model implements Sortable
             $post = Post::find($id);
 
             if ($post === null) {
-                Log::error("Description of photo {$this->id} links to unknown post ${id}.");
+                Log::error("Description of photo {$this->id} links to unknown post {$id}.");
                 $replacements[] = $post_ids[0][$match_id];
             } else {
-                $replacements[] = "<a ${link_options} href=\"" . $post->permalink() . "\">\"{$post->title}\"</a>";
+                $replacements[] = "<a {$link_options} href=\"" . $post->permalink() . "\">\"{$post->title}\"</a>";
             }
         }
 
@@ -233,7 +233,7 @@ class Photo extends Model implements Sortable
         foreach ($coords[1] as $match_id => $coord) {
             $patterns[] = '/' . $coords[0][$match_id] . '/';
             $link = 'https://www.google.com/maps/?q=' . $coord . '&=Search%20Google%20Maps';
-            $replacements[] = "<a ${link_options} href=\"" . $link . "\">{$coord}</a>";
+            $replacements[] = "<a {$link_options} href=\"" . $link . "\">{$coord}</a>";
         }
 
         return preg_replace($patterns, $replacements, $text);
