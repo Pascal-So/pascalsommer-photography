@@ -61,30 +61,30 @@ class Photo extends Model implements Sortable
         $asc = $reverse ? 'desc' : 'asc';
 
         return $query->orderByRaw('CASE WHEN post_id IS NULL THEN photos.weight + 1 ELSE 1 END DESC')
-                    ->leftJoin('posts as p', 'photos.post_id', '=', 'p.id')
-                    ->orderBy('p.date', $desc)
-                    ->orderBy('p.id', $desc)
-                    ->orderBy('weight', $asc)
-                      // the explicit select statement is necessary, because otherwise, the
-                      // photo id gets overwritten by the post id.
-                    ->select(
-                        'photos.id',
-                        'photos.path',
-                        'photos.description',
-                        'photos.weight',
-                        'photos.post_id',
-                        'photos.created_at',
-                        'photos.updated_at'
-                    );
+            ->leftJoin('posts as p', 'photos.post_id', '=', 'p.id')
+            ->orderBy('p.date', $desc)
+            ->orderBy('p.id', $desc)
+            ->orderBy('weight', $asc)
+            // the explicit select statement is necessary, because otherwise, the
+            // photo id gets overwritten by the post id.
+            ->select(
+                'photos.id',
+                'photos.path',
+                'photos.description',
+                'photos.weight',
+                'photos.post_id',
+                'photos.created_at',
+                'photos.updated_at'
+            );
     }
 
     public function prevPhoto()
     {
-        if (! $this->isPublic()) {
+        if (!$this->isPublic()) {
             return Photo::staged()
-                        ->where('weight', '<', $this->weight)
-                        ->orderBy('weight', 'desc')
-                        ->first();
+                ->where('weight', '<', $this->weight)
+                ->orderBy('weight', 'desc')
+                ->first();
         }
 
         $before_in_post = $this->post->photos->where('weight', '<', $this->weight);
@@ -102,11 +102,11 @@ class Photo extends Model implements Sortable
 
     public function nextPhoto()
     {
-        if (! $this->isPublic()) {
+        if (!$this->isPublic()) {
             return Photo::staged()
-                        ->where('weight', '>', $this->weight)
-                        ->orderBy('weight', 'asc')
-                        ->first();
+                ->where('weight', '>', $this->weight)
+                ->orderBy('weight', 'asc')
+                ->first();
         }
 
         $after_in_post = $this->post->photos->where('weight', '>', $this->weight);
@@ -122,12 +122,12 @@ class Photo extends Model implements Sortable
         return $after_in_post->sortBy('weight')->first();
     }
 
-    public function width():int
+    public function width(): int
     {
         return getimagesize($this->imgPath())[0];
     }
 
-    public function height():int
+    public function height(): int
     {
         return getimagesize($this->imgPath())[1];
     }
@@ -146,35 +146,35 @@ class Photo extends Model implements Sortable
         }
     }
 
-    public function titletext():string
+    public function titletext(): string
     {
-        return $this->description;
+        return replaceHotlinks($this->description);
     }
 
-    public function alttext():string
+    public function alttext(): string
     {
         if ($this->description == "") {
             return "Photo by Pascal Sommer";
         }
 
-        return $this->description;
+        return replaceHotlinks($this->description);
     }
 
     public function getPaginationPage()
     {
-        if (! $this->isPublic()) {
+        if (!$this->isPublic()) {
             return null;
         }
 
         return $this->post->getPaginationPage();
     }
 
-    public function isPublic():bool
+    public function isPublic(): bool
     {
         return $this->post !== null;
     }
 
-    public function replaceLinks(string $text, string $link_options = ""):string
+    public function replaceLinks(string $text, string $link_options = ""): string
     {
         return preg_replace(
             "~[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]~",
@@ -183,7 +183,7 @@ class Photo extends Model implements Sortable
         );
     }
 
-    public function replaceInternalLinks(string $text, string $link_options = ""):string
+    public function replaceInternalLinks(string $text, string $link_options = ""): string
     {
         $patterns = [];
         $replacements = [];
@@ -199,13 +199,13 @@ class Photo extends Model implements Sortable
             if ($photo === null) {
                 Log::error("Description of photo {$this->id} links to unknown photo {$id}.");
                 $replacements[] = $photo_ids[0][$match_id];
-            } elseif (! $photo->isPublic()) {
+            } elseif (!$photo->isPublic()) {
                 Log::error("Description of photo {$this->id} links to unpublished photo {$id}.");
                 $replacements[] = $photo_ids[0][$match_id];
             } else {
                 $replacements[] = "<a {$link_options} href=\""
-                                . $photo->url()
-                                . "\">{$id}</a>";
+                    . $photo->url()
+                    . "\">{$id}</a>";
             }
         }
 
@@ -239,23 +239,23 @@ class Photo extends Model implements Sortable
         return preg_replace($patterns, $replacements, $text);
     }
 
-    public function descriptionHTML():string
+    public function descriptionHTML(): string
     {
         $with_br = nl2br(htmlspecialchars($this->description));
         return $this->replaceInternalLinks($this->replaceLinks($with_br, "target=blank"));
     }
 
-    public function url():string
+    public function url(): string
     {
         return route('viewPhoto', ['photo' => $this]);
     }
 
-    public function imgPath():string
+    public function imgPath(): string
     {
         return config('constants.photos_path') . '/' . $this->path;
     }
 
-    public function thumbPath():string
+    public function thumbPath(): string
     {
         $jpg = config('constants.thumbs_path') . '/' . $this->path;
         $info = pathinfo($jpg);
@@ -275,4 +275,14 @@ class Photo extends Model implements Sortable
 
         return parent::delete();
     }
+}
+
+/**
+ * Replate the internal hotlink syntax from the description for the alt text.
+ *
+ * @return string
+ */
+function replaceHotlinks(string $text): string
+{
+    return preg_replace('/#(photo|post|coords)(.+)#/', '\\2', $text);
 }
