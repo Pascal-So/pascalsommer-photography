@@ -16,7 +16,7 @@
 
     btn.onclick = (e) => {
         e.preventDefault();
-        window.location = `{{ route("search") }}/${input.value}`;
+        window.location = `{{ route("search") }}/${encodeURIComponent(input.value)}`;
     };
     input.onkeydown = (e) => {
         if (e.keyCode == 13) {
