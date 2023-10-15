@@ -9,9 +9,13 @@
 cp laravel/.env{.example,}
 
 # Let the server write to these directories
-chmod a+w -R laravel/storage/{framework,logs}
-chmod a+w -R img/photos/
-chmod a+w -R img/thumbs/
+sudo chmod a+w -R laravel/storage/{framework,logs}
+sudo chmod a+w -R img/photos/
+sudo chmod a+w -R img/thumbs/
+
+# Download the photos that are currently uploaded to the server
+rsync -rvih --info=progress2 gegubiha:www/pascalsommer.ch/photography/img/photos/ img/photos/
+rsync -rvih --info=progress2 gegubiha:www/pascalsommer.ch/photography/img/thumbs/ img/thumbs/
 
 # Quickly set up a mysql server
 sudo docker run --rm -d --name blog-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=blog mysql
@@ -30,6 +34,9 @@ cargo run
 
 # Update php dependencies
 sudo docker run --rm -it --name blog-composer -v $PWD/laravel:/app/ composer update
+
+# Run a local php server
+sudo tempcontainerz-php
 ```
 
 At this point you might have to run `compser dump-autoload` on the server, or if php7 is still the default on hostpoint then `/usr/local/php81/bin/composer dump-autoload`.
