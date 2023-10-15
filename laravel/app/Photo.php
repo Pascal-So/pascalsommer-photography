@@ -284,5 +284,5 @@ class Photo extends Model implements Sortable
  */
 function replaceHotlinks(string $text): string
 {
-    return preg_replace('/#(photo|post|coords)(.+)#/', '\\2', $text);
+    return preg_replace('/#(photo|post|coords)([^#]+)#/', '\\2', $text);
 }
