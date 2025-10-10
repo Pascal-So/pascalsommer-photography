@@ -1,7 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
 ---
 
 <Layout>
-		<h1>Astro</h1>
+		<h1 class="p-3">Astro</h1>
+		{posts.map(post =>
+			<div>
+				{post.data.name}
+
+				{post.data.photos.map(photo => <span>* {photo.description}</span> <Image src={photo.img} alt=""/>)}
+			</div>
+		)}
 </Layout>

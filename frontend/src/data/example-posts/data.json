@@ -1,4 +1,10 @@
 {
-  "posts": [{"id": "55", "name": "asdf", "date": "2025-01-08", "photos": ["1011"]}],
-  "photos": [{"id": "1011", "post": "55", "img": "asdf.jpg", "description": "hiii world :3"}]
+  "posts": [
+    {
+      "id": "55",
+      "name": "asdf",
+      "date": "2025-01-08",
+      "photos": [{"id": 1011, "img": "/src/data/example-posts/morocco-small.webp", "description": "hiii world :3"}]
+    }
+  ]
 }
