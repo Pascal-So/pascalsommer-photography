@@ -27,7 +27,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'https://photography.pascalsommer.ch',
-    baseURL: 'http://localhost:4321/',
+    baseURL: 'http://172.17.0.1:4321/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

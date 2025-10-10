@@ -1,21 +1,41 @@
 ---
-import Layout from "../layouts/Layout.astro";
-
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
 
+import { formatDate } from "../utils.ts";
+import Layout from "../layouts/Layout.astro";
+import ExternalPlatformIconLink from "../components/ExternalPlatformIconLink.astro";
+import SoundCloud from '../assets/soundcloud.svg';
+import GitHub from '../assets/github.svg';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
 ---
 
 <Layout>
-		<h1 class="p-3">Astro</h1>
+		<h1 class="mt-10 text-xl">Pascal Sommer</h1>
+		<div class="mb-8 text-center">
+			<ExternalPlatformIconLink link={"https://soundcloud.com/pascal-sommer"}><SoundCloud/></ExternalPlatformIconLink>
+			<ExternalPlatformIconLink link={"https://github.com/Pascal-So/pascalsommer-photography/"}><GitHub/></ExternalPlatformIconLink>
+		</div>
+
 		{posts.map(post =>
 			<div>
-				{post.data.name}
+				<h2 class="mt-5"><a href={`/post/${post.id}`} title="permalink">#</a> {post.data.name} - {formatDate(post.data.date)}</h2>
 
-				{post.data.photos.map(photo => <span>* {photo.description}</span> <Image src={photo.img} alt=""/>)}
+				{post.data.photos.map(photo => (
+					<a href={`/photos/${photo.id}`} title={photo.description} class="inline-block border border-2 border-[#0000] hover:border-[#666]">
+						<Image src={photo.img} alt={photo.description}/>
+					</a>
+					<br/>
+				))}
 			</div>
 		)}
 </Layout>
+
+<style>
+img {
+	width: 80vw;
+}
+</style>

@@ -3,8 +3,37 @@
     {
       "id": "55",
       "name": "asdf",
+      "date": "2025-01-10",
+      "photos": [
+        {"id": 1, "img": "/src/data/example-posts/morocco-small.webp", "description": "hiii world :3"},
+        {"id": 8, "img": "/src/data/example-posts/morocco-small.webp", "description": "helooo"}
+      ]
+    },
+    {
+      "id": "1",
+      "name": "firstpost",
       "date": "2025-01-08",
-      "photos": [{"id": 1011, "img": "/src/data/example-posts/morocco-small.webp", "description": "hiii world :3"}]
+      "photos": [
+        {"id": 5, "img": "/src/data/example-posts/morocco-small.webp", "description": "hiii world :3"},
+        {"id": 1012, "img": "/src/data/example-posts/morocco-small.webp", "description": "helooo"}
+      ]
+    },
+    {
+      "id": "20",
+      "name": "blablab",
+      "date": "2025-01-28",
+      "photos": [
+        {"id": 200, "img": "/src/data/example-posts/morocco-small.webp", "description": "hiii world :3"}
+      ]
+    },
+    {
+      "id": "9",
+      "name": "lastpost",
+      "date": "2025-02-09",
+      "photos": [
+        {"id": 1211, "img": "/src/data/example-posts/morocco-small.webp", "description": "hiii world :3"},
+        {"id": 1212, "img": "/src/data/example-posts/morocco-small.webp", "description": "helooo"}
+      ]
     }
   ]
 }
