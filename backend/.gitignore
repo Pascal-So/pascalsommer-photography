@@ -1,0 +1,11 @@
+laravel/node_modules
+laravel/storage/*.key
+laravel/vendor
+laravel/npm-debug.log
+laravel/yarn-error.log
+laravel/.env
+
+css
+js/admin.js*
+
+mix-manifest.json
