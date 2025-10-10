@@ -1,0 +1,3 @@
+[[language]]
+name = "astro"
+roots = ["astro.config.mjs"]
