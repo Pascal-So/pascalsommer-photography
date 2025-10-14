@@ -1,33 +1,36 @@
 ---
-import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 
-import {formatDate} from '../../utils.ts';
-import Layout from '../../layouts/Layout.astro';
-import Left from '../../assets/left.svg';
-import Right from '../../assets/right.svg';
-import ArrowPlaceholder from '../../assets/arrow_placeholder.svg';
+import { formatDate } from "../../utils.ts";
+import Layout from "../../layouts/Layout.astro";
+import Left from "../../assets/left.svg";
+import Right from "../../assets/right.svg";
+import ArrowPlaceholder from "../../assets/arrow_placeholder.svg";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
-  return posts.flatMap(post => post.data.photos.map(photo => (
-    { params: { id: photo.id.toString() }}
-  )));
+  const posts = await getCollection("posts");
+  return posts.flatMap((post) =>
+    post.data.photos.map((photo) => ({ params: { id: photo.id.toString() } })),
+  );
 }
 
 const { id } = Astro.params;
 
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
 // the term "Idx" here is used as index in the given array order, which is
 // separate from the id.
-const postIdx = posts.findIndex(post =>
-  post.data.photos.findIndex(photo => photo.id.toString() === id) !== -1
+const postIdx = posts.findIndex(
+  (post) =>
+    post.data.photos.findIndex((photo) => photo.id.toString() === id) !== -1,
 );
 const post = posts[postIdx];
-const photoIdx = post.data.photos.findIndex(photo => photo.id.toString() == id);
+const photoIdx = post.data.photos.findIndex(
+  (photo) => photo.id.toString() == id,
+);
 const photo = post.data.photos[photoIdx];
 
 // find previous photo
@@ -49,30 +52,79 @@ if (photoIdx < post.data.photos.length - 1) {
 ---
 
 <Layout>
-  <h2 class="text-lg"><a href="" title="permalink">#</a> {post.data.name} - {formatDate(post.data.date)}</h2>
+  <h2 class="text-lg">
+    <a href="" title="permalink">#</a>
+    {post.data.name} - {formatDate(post.data.date)}
+  </h2>
 
   <div class="flex flex-row items-center justify-center">
-  
-    { previousPhotoId === null
-      ? <span class="nav-arrow"><ArrowPlaceholder/></span>
-      : <a href={`/photos/${previousPhotoId}`} class="nav-arrow"><Left /></a>
+    {
+      previousPhotoId === null ? (
+        <span class="nav-arrow">
+          <ArrowPlaceholder />
+        </span>
+      ) : (
+        <a href={`/photos/${previousPhotoId}`} class="nav-arrow">
+          <Left />
+        </a>
+      )
     }
-    <a href={photo.img.src} target="_blank"><Image src={photo.img} alt={photo.description}/></a>
-    { nextPhotoId === null
-      ? <span class="nav-arrow"><ArrowPlaceholder/></span>
-      : <a href={`/photos/${nextPhotoId}`} class="nav-arrow"><Right /></a>
+    <a href={photo.img.src} target="_blank"
+      ><Image class="photo" src={photo.img} alt={photo.description} /></a
+    >
+    {
+      nextPhotoId === null ? (
+        <span class="nav-arrow">
+          <ArrowPlaceholder />
+        </span>
+      ) : (
+        <a href={`/photos/${nextPhotoId}`} class="nav-arrow">
+          <Right />
+        </a>
+      )
     }
-
   </div>
 </Layout>
 
 <style>
-.nav-arrow {
-  padding: 60px 12px;
-}
+  .photo {
+    max-width: 84vw;
+    max-height: 86vh;
+    width: auto;
+    height: auto;
+  }
 
-.nav-arrow>svg {
-  width: 18px;
-  display: inline;
-}
+  .nav-arrow {
+    padding: 80px 30px;
+    margin-left: 10px;
+  }
+
+  .nav-arrow:first-of-type {
+    padding-left: 45px;
+  }
+  .nav-arrow:last-of-type {
+    padding-right: 45px;
+  }
+
+  .nav-arrow > svg {
+    width: 22px;
+    display: inline;
+  }
+
+  @media (max-width: 1350px) {
+    .nav-arrow {
+      padding: 80px 21px;
+      margin-left: 0px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .nav-arrow {
+      padding: 60px 2vw;
+    }
+
+    .nav-arrow > svg {
+      width: 3vw;
+    }
+  }
 </style>

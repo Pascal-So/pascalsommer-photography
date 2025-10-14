@@ -6,31 +6,30 @@ interface Props {
 const { link } = Astro.props;
 ---
 
-<a href={link}><slot/></a>
+<a href={link}><slot /></a>
 
 <style>
-a {
-  border-radius: 1px;
-  display: inline-block;
-  line-height: 30px;
-  height: 30px;
-  margin: 0 3px;
-  padding: 5px;
-  text-align: center;
+  a {
+    border-radius: 1px;
+    display: inline-block;
+    line-height: 30px;
+    height: 30px;
+    margin: 0 3px;
+    padding: 5px;
+    text-align: center;
 
-  fill: #666;
-}
-a:hover {
-  background-color: #666;
-  fill: #19191c;
-}
+    fill: #666;
+  }
+  a:hover {
+    background-color: #666;
+    fill: #19191c;
+  }
 
-/* Use :global to bypass astro's style scoping and apply
+  /* Use :global to bypass astro's style scoping and apply
  * the style to the svg element passed in as slot.
  */
-a>:global(svg) {
-  display: inline;
-  vertical-align: baseline;
-}
+  a > :global(svg) {
+    display: inline;
+    vertical-align: baseline;
+  }
 </style>
-
