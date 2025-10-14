@@ -69,9 +69,15 @@ if (photoIdx < post.data.photos.length - 1) {
         </a>
       )
     }
-    <a href={photo.img.src} target="_blank"
-      ><Image class="photo" src={photo.img} alt={photo.description} /></a
-    >
+    <a href={photo.img.src} target="_blank">
+      <Image
+        class="photo"
+        src={photo.img}
+        alt={photo.description}
+        priority
+        quality={97}
+      />
+    </a>
     {
       nextPhotoId === null ? (
         <span class="nav-arrow">

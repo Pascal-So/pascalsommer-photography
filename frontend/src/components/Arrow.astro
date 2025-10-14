@@ -1,0 +1,53 @@
+---
+import Left from "../assets/left.svg";
+import Right from "../assets/right.svg";
+import LeftEnd from "../assets/left_end.svg";
+import RightEnd from "../assets/right_end.svg";
+import Placeholder from "../assets/arrow_placeholder.svg";
+
+export enum ArrowKind {
+  Left,
+  Right,
+  LeftEnd,
+  RightEnd,
+}
+
+interface Props {
+  arrow: ArrowKind;
+  url: string | undefined;
+}
+
+const { arrow, url } = Astro.props;
+---
+
+{
+  url === undefined ? (
+    <span><Placeholder /></span>
+  ) : (
+    <a href={url}>
+      {arrow === ArrowKind.Left ? (
+        <Left />
+      ) : arrow === ArrowKind.LeftEnd ? (
+        <LeftEnd />
+      ) : arrow === ArrowKind.Right ? (
+        <Right />
+      ) : (
+        <RightEnd />
+      )}
+    </a>
+  )
+}
+
+<style>
+  a, span {
+    padding: var(--arrow-pad);
+  }
+
+  svg {
+    width: 15px;
+    display: inline;
+  }
+  svg>:global(path) {
+    stroke: #bbb;
+  }
+</style>

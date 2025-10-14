@@ -1,0 +1,40 @@
+---
+import Arrow, { ArrowKind } from "../components/Arrow.astro";
+
+interface Props {
+  current: number;
+  total: number;
+  urls: {
+    /** url of the previous page (if there is one) */
+    prev: string | undefined;
+    /** url of the next page (if there is one) */
+    next: string | undefined;
+    /** url of the first page (if the current page is not the first page) */
+    first: string | undefined;
+    /** url of the last page (if the current page is not the last page) */
+    last: string | undefined;
+  };
+}
+
+const { current, total, urls } = Astro.props;
+---
+
+<nav>
+  <Arrow url={urls.first} arrow={ArrowKind.LeftEnd} />
+  <Arrow url={urls.prev} arrow={ArrowKind.Left} />
+  <span class="mx-3 text-[#888]">{ current } / { total }</span>
+  <Arrow url={urls.next} arrow={ArrowKind.Right} />
+  <Arrow url={urls.last} arrow={ArrowKind.RightEnd} />
+</nav>
+
+<style>
+nav {
+  --arrow-pad: 18px;
+}
+
+@media(max-width: 800px) {
+  nav {
+    --arrow-pad: 6px;
+  }
+}
+</style>

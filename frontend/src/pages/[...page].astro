@@ -1,20 +1,65 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import type { GetStaticPathsOptions } from "astro";
 
 import { formatDate } from "../utils.ts";
 import Layout from "../layouts/Layout.astro";
 import ExternalPlatformIconLink from "../components/ExternalPlatformIconLink.astro";
+import PaginationNav from "../components/PaginationNav.astro";
 import SoundCloud from "../assets/soundcloud.svg";
 import GitHub from "../assets/github.svg";
 
-const posts = (await getCollection("posts")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+// In general we're just using the `paginate` helper to generate pages of the
+// form /page/n where n is in 1.., but at the same time we want the home page
+// at / to also show the same content as /page/1. We do this by manually
+// modifying the output of `paginate`, which is kinda ugly.
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const posts = (await getCollection("posts")).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+  );
+
+  function moveToPagePath(url: string): string {
+    if (url === "/") {
+      return "/page/1";
+    } else {
+      return "/page/" + url.replace("/", "");
+    }
+  }
+
+  let pages = paginate(posts, { pageSize: 10 });
+  let firstPage = undefined;
+  for (let page of pages) {
+    // change the pages to be located under /page/5 as opposed to /5
+
+    const url = page.props.page.url;
+    url.current = moveToPagePath(url.current);
+    url.first = url.first && moveToPagePath(url.first);
+    url.last = url.last && moveToPagePath(url.last);
+    url.next = url.next && moveToPagePath(url.next);
+    url.prev = url.prev && moveToPagePath(url.prev);
+
+    if (page.params.page === undefined) {
+      firstPage = {...page};
+      firstPage.params = { page: "/" };
+      page.params.page = "/page/1";
+    } else {
+      page.params.page = moveToPagePath(page.params.page);
+    }
+  }
+  if (firstPage !== undefined) {
+    pages = [firstPage, ...pages]
+  }
+
+  return pages;
+}
+
+const { page } = Astro.props;
+const showTopNav = Astro.params.page?.includes("page");
 ---
 
 <Layout>
-  <h1 class="mt-10">Pascal Sommer</h1>
+  <a href="/"><h1 class="mt-10">Pascal Sommer</h1></a>
   <h3 class="subheading">— Photography —</h3>
   <div class="mb-8 text-center">
     <ExternalPlatformIconLink link={"https://soundcloud.com/pascal-sommer"}
@@ -27,7 +72,20 @@ const posts = (await getCollection("posts")).sort(
   </div>
 
   {
-    posts.map((post) => (
+    showTopNav && (
+      <>
+        <PaginationNav
+          current={page.currentPage}
+          total={page.lastPage}
+          urls={page.url}
+        />
+        <br />
+      </>
+    )
+  }
+
+  {
+    page.data.map((post) => (
       <div>
         <h2 class="mt-5">
           <a href={`/post/${post.id}`} title="permalink">
@@ -51,6 +109,12 @@ const posts = (await getCollection("posts")).sort(
       </div>
     ))
   }
+
+  <PaginationNav
+    current={page.currentPage}
+    total={page.lastPage}
+    urls={page.url}
+  />
 </Layout>
 
 <style>
