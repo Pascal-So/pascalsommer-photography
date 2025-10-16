@@ -58,3 +58,16 @@ body {
   padding-top: 10px;
   text-align: center;
 }
+
+a:visited {
+  color: #bbc;
+}
+a {
+  color: #89b;
+  text-decoration: underline dotted;
+}
+.stealth-link,
+.stealth-link:visited {
+  color: #eee;
+  text-decoration: none;
+}

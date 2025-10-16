@@ -22,19 +22,19 @@ const { current, total, urls } = Astro.props;
 <nav>
   <Arrow url={urls.first} arrow={ArrowKind.LeftEnd} />
   <Arrow url={urls.prev} arrow={ArrowKind.Left} />
-  <span class="mx-3 text-[#888]">{ current } / { total }</span>
+  <span class="mx-3 text-[#888]">{current} / {total}</span>
   <Arrow url={urls.next} arrow={ArrowKind.Right} />
   <Arrow url={urls.last} arrow={ArrowKind.RightEnd} />
 </nav>
 
 <style>
-nav {
-  --arrow-pad: 18px;
-}
-
-@media(max-width: 800px) {
   nav {
-    --arrow-pad: 6px;
+    --arrow-pad: 18px;
   }
-}
+
+  @media (max-width: 800px) {
+    nav {
+      --arrow-pad: 6px;
+    }
+  }
 </style>

@@ -7,6 +7,7 @@ import { formatDate } from "../utils.ts";
 import Layout from "../layouts/Layout.astro";
 import ExternalPlatformIconLink from "../components/ExternalPlatformIconLink.astro";
 import PaginationNav from "../components/PaginationNav.astro";
+import Header from "../components/Header.astro";
 import SoundCloud from "../assets/soundcloud.svg";
 import GitHub from "../assets/github.svg";
 
@@ -40,7 +41,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     url.prev = url.prev && moveToPagePath(url.prev);
 
     if (page.params.page === undefined) {
-      firstPage = {...page};
+      firstPage = { ...page };
       firstPage.params = { page: "/" };
       page.params.page = "/page/1";
     } else {
@@ -48,7 +49,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     }
   }
   if (firstPage !== undefined) {
-    pages = [firstPage, ...pages]
+    pages = [firstPage, ...pages];
   }
 
   return pages;
@@ -59,8 +60,7 @@ const showTopNav = Astro.params.page?.includes("page");
 ---
 
 <Layout>
-  <a href="/"><h1 class="mt-10">Pascal Sommer</h1></a>
-  <h3 class="subheading">— Photography —</h3>
+  <Header />
   <div class="mb-8 text-center">
     <ExternalPlatformIconLink link={"https://soundcloud.com/pascal-sommer"}
       ><SoundCloud /></ExternalPlatformIconLink
@@ -88,9 +88,9 @@ const showTopNav = Astro.params.page?.includes("page");
     page.data.map((post) => (
       <div>
         <h2 class="mt-5">
-          <a href={`/post/${post.id}`} title="permalink">
-            #
-          </a>{" "}
+          <span title="permalink">
+            <a href={`/post/${post.id}`}>#</a>
+          </span>{" "}
           {post.data.name} - {formatDate(post.data.date)}
         </h2>
 
@@ -134,17 +134,6 @@ const showTopNav = Astro.params.page?.includes("page");
   h2 a {
     font-size: 1.2rem;
   }
-  h1 {
-    font-size: 1.3rem;
-  }
-
-  .subheading {
-    font-size: 0.8rem;
-    color: #666;
-    display: inline;
-    position: relative;
-    top: -5px;
-  }
 
   @media (max-width: 1300px) {
     .photo {
@@ -170,9 +159,6 @@ const showTopNav = Astro.params.page?.includes("page");
     h2,
     h2 a {
       font-size: 1rem;
-    }
-    h1 {
-      font-size: 1.1rem;
     }
   }
 

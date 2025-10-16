@@ -22,9 +22,11 @@ const { arrow, url } = Astro.props;
 
 {
   url === undefined ? (
-    <span><Placeholder /></span>
+    <span>
+      <Placeholder />
+    </span>
   ) : (
-    <a href={url}>
+    <a href={url} data-astro-prefetch="viewport">
       {arrow === ArrowKind.Left ? (
         <Left />
       ) : arrow === ArrowKind.LeftEnd ? (
@@ -39,7 +41,8 @@ const { arrow, url } = Astro.props;
 }
 
 <style>
-  a, span {
+  a,
+  span {
     padding: var(--arrow-pad);
   }
 
@@ -47,7 +50,7 @@ const { arrow, url } = Astro.props;
     width: 15px;
     display: inline;
   }
-  svg>:global(path) {
+  svg > :global(path) {
     stroke: #bbb;
   }
 </style>

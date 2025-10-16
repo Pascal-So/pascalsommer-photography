@@ -1,0 +1,70 @@
+---
+import { getCollection, getEntries } from "astro:content";
+import { Image } from "astro:assets";
+
+import Layout from "../../layouts/Layout.astro";
+import Tag from "../../components/Tag.astro";
+import Header from "../../components/Header.astro";
+
+export async function getStaticPaths() {
+  const tags = await getCollection("tags");
+  return tags.map((tag) => ({ params: { tags: tag.id } }));
+}
+
+// For now we just have one single tag filter allowed, no intersection and
+// negative filters allowed yet.
+const { tags: tag } = Astro.params;
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const tagsMap = Object.fromEntries(
+  (await getCollection("tags")).map((t) => [
+    t.id,
+    { name: t.id, active: t.id === tag, total: 0, order: t.data.order },
+  ]),
+);
+const filteredPhotos = [];
+
+for (const post of posts) {
+  for (const photo of post.data.photos) {
+    const photoTags = await getEntries(photo.tags);
+
+    for (const pt of photoTags) {
+      tagsMap[pt.id].total++;
+      if (tagsMap[pt.id].active) {
+        filteredPhotos.push(photo);
+      }
+    }
+  }
+}
+
+const tags = Object.values(tagsMap).sort((a, b) => a.order - b.order);
+---
+
+<Layout>
+  <Header />
+  <h2 class="text-lg mb-2">Tag Filter</h2>
+
+  <div class="mb-6 max-w-[900px] m-auto">
+    {
+      tags.map((tag) => (
+        <Tag
+          text={`${tag.name} (${tag.total})`}
+          url={`/tag/${tag.name}`}
+          active={tag.active}
+        />
+      ))
+    }
+  </div>
+
+  <div
+    class="grid grid-cols-[repeat(auto-fill,250px)] justify-center m-auto gap-2"
+  >
+    {
+      filteredPhotos.map((photo) => (
+        <a href={`/photos/${photo.id}`}><Image src={photo.img} alt={photo.description} width={250} /></a>
+      ))
+    }
+  </div>
+</Layout>
