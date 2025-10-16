@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 
 import { formatDate } from "../utils.ts";
+import { postsPerPage } from "../constants.ts";
 import Layout from "../layouts/Layout.astro";
 import ExternalPlatformIconLink from "../components/ExternalPlatformIconLink.astro";
 import PaginationNav from "../components/PaginationNav.astro";
@@ -28,7 +29,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     }
   }
 
-  let pages = paginate(posts, { pageSize: 10 });
+  let pages = paginate(posts, { pageSize: postsPerPage });
   let firstPage = undefined;
   for (let page of pages) {
     // change the pages to be located under /page/5 as opposed to /5
@@ -87,7 +88,7 @@ const showTopNav = Astro.params.page?.includes("page");
   {
     page.data.map((post) => (
       <div>
-        <h2 class="mt-5">
+        <h2 class="mt-5" id={`post-${post.id}`}>
           <span title="permalink">
             <a href={`/post/${post.id}`}>#</a>
           </span>{" "}
