@@ -71,7 +71,7 @@ const parsedDescription = parseDescription(photo.description);
           <ArrowPlaceholder />
         </span>
       ) : (
-        <a href={`/photos/${previousPhotoId}`} class="nav-arrow">
+        <a href={`/photos/${previousPhotoId}`} class="nav-arrow" data-shortcut-key="ArrowLeft" title="shortcut: left arrow">
           <Left />
         </a>
       )
@@ -91,7 +91,7 @@ const parsedDescription = parseDescription(photo.description);
           <ArrowPlaceholder />
         </span>
       ) : (
-        <a href={`/photos/${nextPhotoId}`} class="nav-arrow">
+        <a href={`/photos/${nextPhotoId}`} class="nav-arrow" data-shortcut-key="ArrowRight" title="shortcut: right arrow">
           <Right />
         </a>
       )
@@ -125,8 +125,10 @@ const parsedDescription = parseDescription(photo.description);
       }
     </div>
   </div>
-  <p class="mb-32">Go to a <a href="/photos/random">random photo</a>.</p>
+  <p class="mb-32">Go to a <a href="/photos/random" data-shortcut-key="r" title="shortcut: r">random photo</a>.</p>
 </Layout>
+
+<script src="../../keyboardNavigation.ts" />
 
 <style>
   .tags {

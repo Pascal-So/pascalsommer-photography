@@ -18,6 +18,15 @@ interface Props {
 }
 
 const { arrow, url } = Astro.props;
+
+const shortcutKeyMap = new Map([
+  [ArrowKind.Left, ["ArrowLeft", "shortcut: left arrow"]],
+  [ArrowKind.Right, ["ArrowRight", "shortcut: right arrow"]],
+]);
+const [shortcutKey, title] = shortcutKeyMap.get(arrow) || [
+  undefined,
+  undefined,
+];
 ---
 
 {
@@ -26,7 +35,12 @@ const { arrow, url } = Astro.props;
       <Placeholder />
     </span>
   ) : (
-    <a href={url} data-astro-prefetch="viewport">
+    <a
+      href={url}
+      data-astro-prefetch="viewport"
+      data-shortcut-key={shortcutKey}
+      title={title}
+    >
       {arrow === ArrowKind.Left ? (
         <Left />
       ) : arrow === ArrowKind.LeftEnd ? (
@@ -39,6 +53,8 @@ const { arrow, url } = Astro.props;
     </a>
   )
 }
+
+<script src="../keyboardNavigation.ts"></script>
 
 <style>
   a,
