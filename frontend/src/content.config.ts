@@ -3,7 +3,7 @@ import { defineCollection, reference, z } from "astro:content";
 import mysql, { type ConnectionOptions } from "mysql2/promise";
 import fs from "node:fs/promises";
 
-const importFromDB = true;
+const importFromDB = false;
 if (importFromDB) {
   const connOptions: ConnectionOptions = {
     user: import.meta.env.DB_USER,

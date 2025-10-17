@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+
+import Layout from "../../layouts/Layout.astro";
+
+const posts = await getCollection("posts");
+const photos = posts.flatMap(post => post.data.photos);
+const ids = JSON.stringify(photos.map(photo => photo.id));
+---
+
+<Layout>
+  <div id="redirect-content" data-ids={ids}></div>
+</Layout>
+
+<script>
+  const el = document.getElementById("redirect-content")!;
+  const ids = JSON.parse(el.dataset.ids!);
+  const id = ids[Math.floor(Math.random() * ids.length)];
+  const loc = document.location;
+  const link = `${loc.protocol}//${loc.host}/photos/${id}`;
+  el.innerHTML = `redirecting to <a href="${link}">${link}</a>...`;
+  window.location.replace(link);
+</script>
