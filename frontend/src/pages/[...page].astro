@@ -105,6 +105,7 @@ const showTopNav = Astro.params.page?.includes("page");
               <Image
                 src={photo.img}
                 alt={serializePlain(parseDescription(photo.description))}
+                quality={85}
               />
             </a>
             <br />

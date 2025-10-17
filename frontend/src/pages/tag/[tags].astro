@@ -63,7 +63,14 @@ const tags = Object.values(tagsMap).sort((a, b) => a.order - b.order);
   >
     {
       filteredPhotos.map((photo) => (
-        <a href={`/photos/${photo.id}`}><Image src={photo.img} alt={photo.description} width={250} /></a>
+        <a href={`/photos/${photo.id}`}>
+          <Image
+            src={photo.img}
+            alt={photo.description}
+            width={250}
+            quality={50}
+          />
+        </a>
       ))
     }
   </div>
