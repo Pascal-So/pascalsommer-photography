@@ -101,17 +101,20 @@ const parsedDescription = parseDescription(photo.description);
   <div class="description">
     <span>
       <span class="underline decoration-dotted">Photo {photo.id}</span>:
-      {parsedDescription.map(el => {
-        if (typeof(el) === "string") {
-          return el;
-        } else if (el.linktype === "coords") {
-          return el.latlng; // todo
-        } else if (el.linktype === "photo") {
-          return <a href={`/photos/${el.id}`}>{el.id}</a>;
-        } else {
-          return <a href={`/post/${el.id}`}>{el.id}</a>;
-        }
-      })}
+      {
+        parsedDescription.map((el) => {
+          if (typeof el === "string") {
+            return el;
+          } else if (el.linktype === "coords") {
+            const link = `https://www.google.com/maps/?q=${el.latlng}&=Search%20Google%20Maps`;
+            return <a href={link}>{el.latlng}</a>;
+          } else if (el.linktype === "photo") {
+            return <a href={`/photos/${el.id}`}>{el.id}</a>;
+          } else {
+            return <a href={`/post/${el.id}`}>{el.id}</a>;
+          }
+        })
+      }
     </span>
 
     <div class="tags">

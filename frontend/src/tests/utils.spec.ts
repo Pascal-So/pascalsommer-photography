@@ -39,7 +39,19 @@ test("parse description with different link types", () => {
   ]);
 });
 
-// todo: coords parsing
+test("serialize short coords", () => {
+  const desc = "#coords47°00'00\"N 7°00'00\"E#";
+  expect(parseDescription(desc)).toStrictEqual([
+    { linktype: "coords", latlng: "47°00'00\"N 7°00'00\"E" },
+  ]);
+});
+
+test("serialize long coords", () => {
+  const desc = "#coords54°30'00.2\"N 11°13'36.4\"E#";
+  expect(parseDescription(desc)).toStrictEqual([
+    { linktype: "coords", latlng: "54°30'00.2\"N 11°13'36.4\"E" },
+  ]);
+});
 
 test("serialize plain with just string", () => {
   expect(serializePlain(["asdflkj"])).toStrictEqual("asdflkj");
