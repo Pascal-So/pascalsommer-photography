@@ -2,7 +2,7 @@
 import { getCollection, getEntries } from "astro:content";
 import { Image } from "astro:assets";
 
-import { formatDate } from "../../utils.ts";
+import { formatDate, serializePlain, parseDescription } from "../../utils.ts";
 import Layout from "../../layouts/Layout.astro";
 import Left from "../../assets/left.svg";
 import Right from "../../assets/right.svg";
@@ -52,6 +52,8 @@ if (photoIdx < post.data.photos.length - 1) {
 }
 
 const tags = await getEntries(photo.tags);
+
+const parsedDescription = parseDescription(photo.description);
 ---
 
 <Layout>
@@ -78,7 +80,7 @@ const tags = await getEntries(photo.tags);
       <Image
         class="photo"
         src={photo.img}
-        alt={photo.description}
+        alt={serializePlain(parsedDescription)}
         priority
         quality={97}
       />
@@ -99,11 +101,25 @@ const tags = await getEntries(photo.tags);
   <div class="description">
     <span>
       <span class="underline decoration-dotted">Photo {photo.id}</span>:
-      {photo.description}
+      {parsedDescription.map(el => {
+        if (typeof(el) === "string") {
+          return el;
+        } else if (el.linktype === "coords") {
+          return el.latlng; // todo
+        } else if (el.linktype === "photo") {
+          return <a href={`/photos/${el.id}`}>{el.id}</a>;
+        } else {
+          return <a href={`/post/${el.id}`}>{el.id}</a>;
+        }
+      })}
     </span>
 
     <div class="tags">
-      { tags.map((tag) => <Tag text={tag.id} url={`/tag/${tag.id}`} active={false} />) }
+      {
+        tags.map((tag) => (
+          <Tag text={tag.id} url={`/tag/${tag.id}`} active={false} />
+        ))
+      }
     </div>
   </div>
 </Layout>

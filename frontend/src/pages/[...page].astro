@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 
-import { formatDate } from "../utils.ts";
+import { formatDate, serializePlain, parseDescription } from "../utils.ts";
 import { postsPerPage } from "../constants.ts";
 import Layout from "../layouts/Layout.astro";
 import ExternalPlatformIconLink from "../components/ExternalPlatformIconLink.astro";
@@ -102,7 +102,10 @@ const showTopNav = Astro.params.page?.includes("page");
               title={photo.description}
               class="photo"
             >
-              <Image src={photo.img} alt={photo.description} />
+              <Image
+                src={photo.img}
+                alt={serializePlain(parseDescription(photo.description))}
+              />
             </a>
             <br />
           </>
