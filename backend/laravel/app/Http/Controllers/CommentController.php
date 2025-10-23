@@ -79,6 +79,16 @@ class CommentController extends Controller
         return redirect($photo->url());
     }
 
+    public function list(Photo $photo)
+    {
+        $comments = $photo
+            ->comments()
+            ->select('id', 'photo_id', 'name', 'comment', 'created_at')
+            ->get();
+
+        return $comments;
+    }
+
     public function delete(Comment $comment)
     {
         $comment->delete();

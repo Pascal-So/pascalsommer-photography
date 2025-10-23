@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function(){
         ->name('deleteComment');
 });
 
+Route::get('/api/photos/{photo}/comments', 'CommentController@list');
+
 
 /*
 |  Blacklist Routes
