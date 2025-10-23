@@ -7,7 +7,20 @@ function activateKeyboardNavigation() {
     htmlElements.map((el) => [el.getAttribute("data-shortcut-key"), el]),
   );
 
-  document.onkeyup = (evt) => {
+  document.onkeydown = (evt) => {
+    if (evt.ctrlKey || evt.altKey || evt.shiftKey) {
+      return;
+    }
+
+    // Don't do anything if a textfield is in focus.
+    if (document.activeElement) {
+      const tagName = document.activeElement.tagName.toLowerCase();
+
+      if (tagName == "input" || tagName == "textarea") {
+        return;
+      }
+    }
+
     const el = keyMap.get(evt.key);
     if (el !== undefined) {
       el.click();
@@ -16,4 +29,3 @@ function activateKeyboardNavigation() {
 }
 
 activateKeyboardNavigation();
-

@@ -2,12 +2,19 @@
 import { getCollection, getEntries } from "astro:content";
 import { Image } from "astro:assets";
 
-import { formatDate, serializePlain, parseDescription } from "../../utils.ts";
+import {
+  nl2br,
+  formatDate,
+  serializePlain,
+  parseDescription,
+  escapeHtml,
+} from "../../utils.ts";
 import Layout from "../../layouts/Layout.astro";
 import Left from "../../assets/left.svg";
 import Right from "../../assets/right.svg";
 import ArrowPlaceholder from "../../assets/arrow_placeholder.svg";
 import Tag from "../../components/Tag.astro";
+import Comments from "../../components/Comments.tsx";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -71,7 +78,12 @@ const parsedDescription = parseDescription(photo.description);
           <ArrowPlaceholder />
         </span>
       ) : (
-        <a href={`/photos/${previousPhotoId}`} class="nav-arrow" data-shortcut-key="ArrowLeft" title="shortcut: left arrow">
+        <a
+          href={`/photos/${previousPhotoId}`}
+          class="nav-arrow"
+          data-shortcut-key="ArrowLeft"
+          title="shortcut: left arrow"
+        >
           <Left />
         </a>
       )
@@ -91,44 +103,58 @@ const parsedDescription = parseDescription(photo.description);
           <ArrowPlaceholder />
         </span>
       ) : (
-        <a href={`/photos/${nextPhotoId}`} class="nav-arrow" data-shortcut-key="ArrowRight" title="shortcut: right arrow">
+        <a
+          href={`/photos/${nextPhotoId}`}
+          class="nav-arrow"
+          data-shortcut-key="ArrowRight"
+          title="shortcut: right arrow"
+        >
           <Right />
         </a>
       )
     }
   </div>
 
-  <div class="description">
-    <span>
-      <span class="underline decoration-dotted">Photo {photo.id}</span>:
-      {
-        parsedDescription.map((el) => {
-          if (typeof el === "string") {
-            return el;
-          } else if (el.linktype === "coords") {
-            const link = `https://www.google.com/maps/?q=${el.latlng}&=Search%20Google%20Maps`;
-            return <a href={link}>{el.latlng}</a>;
-          } else if (el.linktype === "photo") {
-            return <a href={`/photos/${el.id}`}>{el.id}</a>;
-          } else {
-            return <a href={`/post/${el.id}`}>{el.id}</a>;
-          }
-        })
-      }
-    </span>
+  <div class="description-area">
+    <div class="description card">
+      <span>
+        <span class="underline decoration-dotted">Photo {photo.id}</span>:
+        {
+          parsedDescription.map((el) => {
+            if (typeof el === "string") {
+              return <span set:html={nl2br(escapeHtml(el))} />;
+            } else if (el.linktype === "coords") {
+              const link = `https://www.google.com/maps/?q=${el.latlng}&=Search%20Google%20Maps`;
+              return <a href={link}>{el.latlng}</a>;
+            } else if (el.linktype === "photo") {
+              return <a href={`/photos/${el.id}`}>{el.id}</a>;
+            } else {
+              return <a href={`/post/${el.id}`}>{el.id}</a>;
+            }
+          })
+        }
+      </span>
 
-    <div class="tags">
-      {
-        tags.map((tag) => (
-          <Tag text={tag.id} url={`/tag/${tag.id}`} active={false} />
-        ))
-      }
+      <div class="tags">
+        {
+          tags.map((tag) => (
+            <Tag text={tag.id} url={`/tag/${tag.id}`} active={false} />
+          ))
+        }
+      </div>
     </div>
+
+    <Comments client:only="react" />
   </div>
-  <p class="mb-32">Go to a <a href="/photos/random" data-shortcut-key="r" title="shortcut: r">random photo</a>.</p>
+
+  <p class="mb-32">
+    Go to a <a href="/photos/random" data-shortcut-key="r" title="shortcut: r">
+      random photo</a
+    >.
+  </p>
 </Layout>
 
-<script src="../../keyboardNavigation.ts" />
+<script src="../../keyboardNavigation.ts"></script>
 
 <style>
   .tags {
@@ -138,25 +164,20 @@ const parsedDescription = parseDescription(photo.description);
     flex-shrink: 0;
   }
 
-  .description {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    justify-content: space-between;
-
+  .description-area {
     width: 84vw;
     max-width: 600px;
     margin: auto;
     margin-top: 15px;
     margin-bottom: 10px;
+  }
 
-    border: 1px solid #444;
-    border-radius: 4px;
+  .description {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
 
-    padding: 10px;
-
-    hyphens: auto;
-    text-align: left;
+    margin-bottom: 15px;
   }
 
   .photo {
