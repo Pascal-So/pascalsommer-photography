@@ -61,11 +61,13 @@ if (photoIdx < post.data.photos.length - 1) {
 const tags = await getEntries(photo.tags);
 
 const parsedDescription = parseDescription(photo.description);
+
+const permalink = `/photos/${id}`;
 ---
 
 <Layout>
   <h2 class="text-lg mb-2">
-    <a href={`/photos/${id}`} title="permalink">#</a>
+    <a href={permalink} title="permalink">#</a>
     <a href={`/post/${post.id}`} class="stealth-link">
       {post.data.name} - {formatDate(post.data.date)}</a
     >
@@ -118,7 +120,7 @@ const parsedDescription = parseDescription(photo.description);
   <div class="description-area">
     <div class="description card">
       <span>
-        <span class="underline decoration-dotted">Photo {photo.id}</span>:
+        <a href={permalink} title="permalink">Photo {photo.id}</a>
         {
           parsedDescription.map((el) => {
             if (typeof el === "string") {
@@ -144,7 +146,7 @@ const parsedDescription = parseDescription(photo.description);
       </div>
     </div>
 
-    <Comments client:only="react" />
+    <Comments client:only="react" backendUrl={ import.meta.env.BACKEND_URL } photo={photo.id} />
   </div>
 
   <p class="mb-32">

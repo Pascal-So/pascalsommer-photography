@@ -1,17 +1,44 @@
+import { useEffect, useState } from "react";
 import Comment from "./Comment.tsx";
 
-export default function Comments() {
-  const id = 1234;
-  const date: Date = new Date("2023-07-14");
-  const author = "Pascal";
-  const content =
-    "asdfffffff\n\nmultiline comment with &gt; <span>stuff</span>";
+export type CommentsProps = {
+  backendUrl: string;
+  photo: number;
+};
+
+type CommentsState = "loading" | "error" | [any];
+
+export default function Comments({ backendUrl, photo }: CommentsProps) {
+  const [comments, setComments] = useState<CommentsState>("loading");
+
+  useEffect(() => {
+    setComments("loading");
+    fetch(`${backendUrl}/api/photos/${photo}/comments`)
+      .then((response) => response.json())
+      .then((json) => setComments(json))
+      .catch((err) => {
+        console.warn(`could not fetch comments for photo ${photo}`, err);
+        setComments("error");
+      });
+  }, [photo, setComments, backendUrl]);
+
+  if (comments === "loading") {
+    return <span>Loading Comments...</span>;
+  } else if (comments === "error") {
+    return <div></div>;
+  }
 
   return (
-    <>
-      <Comment id={id} date={date} author={author} content={content} />
-
-      <Comment id={id + 1} date={date} author={author} content={content} />
-    </>
+    <div>
+      {comments.map((comment) => (
+        <Comment
+          id={comment.id}
+          author={comment.name}
+          content={comment.comment}
+          date={new Date(comment.created_at)}
+          key={comment.id}
+        />
+      ))}
+    </div>
   );
 }
