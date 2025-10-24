@@ -1,0 +1,29 @@
+services:
+  backend:
+    image: php-backend
+    volumes:
+      - ${SERVER_DATA_ROOT}/img/photos:/var/www/html/img/photos
+      - ${SERVER_DATA_ROOT}/img/thumbs:/var/www/html/img/thumbs
+      - type: bind
+        source: ${SERVER_DATA_ROOT}/.env 
+        target: /var/www/html/laravel/.env
+        read_only: true
+        bind:
+          create_host_path: false
+    restart: unless-stopped
+
+
+  mysql:
+    image: mysql:9.4
+    # The mysql container creates its own volume, therefore we don't
+    # manually add a volume here.
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    restart: unless-stopped
+
+networks:
+  default:
+    name: fsn-internal-network
+    external: true
+

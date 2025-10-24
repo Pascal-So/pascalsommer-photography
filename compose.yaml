@@ -8,18 +8,10 @@ services:
       - ./backend/laravel/.env:/var/www/html/laravel/.env:ro
     ports:
       - "8001:80"
-    restart: unless-stopped
 
 
   mysql:
     image: mysql:9.4
-    # The mysql container creates its own volume, therefore we don't
-    # manually add a volume here.
-    ports:
-      # Expose the port to the host so that we can run backups, but
-      # don't expose it publicly.
-      - 127.0.0.1:33060:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
-    restart: unless-stopped
