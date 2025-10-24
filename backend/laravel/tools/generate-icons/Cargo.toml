@@ -1,9 +1,0 @@
-[package]
-name = "generate-icons"
-version = "0.1.0"
-edition = "2018"
-
-[dependencies]
-svg = "0.9"
-nalgebra = "0.26"
-impl_ops = "0.1"
