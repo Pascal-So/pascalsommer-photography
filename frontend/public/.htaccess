@@ -1,0 +1,35 @@
+# handle trailing slashes
+#
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 1. Prevent Apache from automatically adding a trailing slash to directories
+    DirectorySlash Off
+    
+    # 2. Manually rewrite requests for directories (that don't have a slash) 
+    #    to their corresponding index.html file. This happens internally, without a redirect.
+    #    e.g., a request for /posts/2 is served the content of /posts/2/index.html
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^(.*[^/])$ %{REQUEST_URI}/index.html [L]
+</IfModule>
+
+
+# setup caching rules
+#
+<IfModule mod_headers.c>
+    # For ALL HTML documents, set a short cache time.
+    # We trigger the rule based on the final Content-Type of the response,
+    # not based on the request path, so it doesn't matter if the URL is
+    # /about, /about.html, or /about/
+    Header set Cache-Control "public, max-age=300" "expr=%{CONTENT_TYPE} == 'text/html'"
+    
+    # Other files can be aggressively cached since either they don't
+    # change or they are hashed.
+    <FilesMatch "\.(css|js|ico|gif|jpe?g|png|svg|webp|woff2?|ttf|eot)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+</IfModule>
+
+# When DirectorySlash is off, we should explicitly disable directory listings
+# to prevent exposing the file list if an index.html is missing.
+Options -Indexes
