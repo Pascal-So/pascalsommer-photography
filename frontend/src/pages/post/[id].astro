@@ -21,8 +21,18 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { page } = Astro.props;
 const { id } = Astro.params;
-return Astro.redirect(`/page/${page}#post-${id}`);
+const target = `/page/${page}#post-${id}`;
 ---
 
 <Layout>
+  <div id="redirect-content" data-target={target}></div>
 </Layout>
+
+<script>
+  const el = document.getElementById("redirect-content")!;
+  const target = el.dataset.target!;
+  const loc = document.location;
+  const link = `${loc.protocol}//${loc.host}${target}`;
+  el.innerHTML = `redirecting to post <a href="${link}">${link}</a>...`;
+  window.location.replace(link);
+</script>
