@@ -17,52 +17,41 @@ import Tag from "../../components/Tag.astro";
 import Comments from "../../components/Comments.tsx";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
-  return posts.flatMap((post) =>
-    post.data.photos.map((photo) => ({ params: { id: photo.id.toString() } })),
+  const posts = (await getCollection("posts")).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
   );
+  // We don't need to sort photos within a post because the input to the
+  // astro collection system already deals with sorting.
+  const photos = posts.flatMap((post) =>
+    post.data.photos.map((photo) => [photo, post] as const),
+  );
+
+  return photos.map(([photo, post], idx) => {
+    // We use the fact that out of bounds access returns undefined instead
+    // of erroring as a compact way of denoting that the last photo does
+    // not have an older photo. Needs manual type assertions because
+    // typescript does not care about soundness.
+    const previousPhotoId = photos[idx - 1]?.[0]?.id as number | undefined;
+    const nextPhotoId = photos[idx + 1]?.[0]?.id as number | undefined;
+    return {
+      params: { id: photo.id.toString() },
+      props: {
+        photo,
+        post,
+        previousPhotoId,
+        nextPhotoId,
+      },
+    };
+  });
 }
 
-const { id } = Astro.params;
-
-const posts = (await getCollection("posts")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
-
-// the term "Idx" here is used as index in the given array order, which is
-// separate from the id.
-const postIdx = posts.findIndex(
-  (post) =>
-    post.data.photos.findIndex((photo) => photo.id.toString() === id) !== -1,
-);
-const post = posts[postIdx];
-const photoIdx = post.data.photos.findIndex(
-  (photo) => photo.id.toString() == id,
-);
-const photo = post.data.photos[photoIdx];
-
-// find previous photo
-let previousPhotoId: string | null = null;
-if (photoIdx > 0) {
-  previousPhotoId = post.data.photos[photoIdx - 1].id.toString();
-} else if (postIdx > 0) {
-  const prevPhotos = posts[postIdx - 1].data.photos;
-  previousPhotoId = prevPhotos[prevPhotos.length - 1].id.toString();
-}
-
-// find next photo
-let nextPhotoId: string | null = null;
-if (photoIdx < post.data.photos.length - 1) {
-  nextPhotoId = post.data.photos[photoIdx + 1].id.toString();
-} else if (postIdx < posts.length - 1) {
-  nextPhotoId = posts[postIdx + 1].data.photos[0].id.toString();
-}
+const { photo, post, previousPhotoId, nextPhotoId } = Astro.props;
 
 const tags = await getEntries(photo.tags);
 
 const parsedDescription = parseDescription(photo.description);
 
-const permalink = `/photos/${id}`;
+const permalink = `/photos/${photo.id}`;
 ---
 
 <Layout>
@@ -75,7 +64,7 @@ const permalink = `/photos/${id}`;
 
   <div class="flex flex-row items-center justify-center">
     {
-      previousPhotoId === null ? (
+      previousPhotoId === undefined ? (
         <span class="nav-arrow">
           <ArrowPlaceholder />
         </span>
@@ -100,7 +89,7 @@ const permalink = `/photos/${id}`;
       />
     </a>
     {
-      nextPhotoId === null ? (
+      nextPhotoId === undefined ? (
         <span class="nav-arrow">
           <ArrowPlaceholder />
         </span>
@@ -146,7 +135,11 @@ const permalink = `/photos/${id}`;
       </div>
     </div>
 
-    <Comments client:only="react" backendUrl={ import.meta.env.BACKEND_URL } photo={photo.id} />
+    <Comments
+      client:only="react"
+      backendUrl={import.meta.env.BACKEND_URL}
+      photo={photo.id}
+    />
   </div>
 
   <p class="mb-32">
