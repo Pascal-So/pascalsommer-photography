@@ -13,6 +13,6 @@ yarn install --frozen-lockfile
 npm run prod
 cd ../..
 
-docker compose build backend
+docker compose -f compose.local.yaml build backend
 docker image save -o php-backend.image php-backend
 

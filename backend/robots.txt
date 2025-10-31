@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /
+
+# 50k request per day from claudebot? you guys need to go touch some grass
