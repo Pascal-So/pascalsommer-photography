@@ -1,17 +1,10 @@
 ---
-import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import type { GetStaticPathsOptions } from "astro";
 
 import { postsPerPage } from "../../constants.ts";
 import Layout from "../../layouts/Layout.astro";
 
-
-// In general we're just using the `paginate` helper to generate pages of the
-// form /page/n where n is in 1.., but at the same time we want the home page
-// at / to also show the same content as /page/1. We do this by manually
-// modifying the output of `paginate`, which is kinda ugly.
-export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+export async function getStaticPaths() {
   const posts = (await getCollection("posts")).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
   );

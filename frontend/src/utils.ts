@@ -1,5 +1,5 @@
 export function formatDate(date: Date): string {
-  return date.toISOString().split("T")[0];
+  return date.toISOString().split("T")[0]!;
 }
 
 export type DescriptionElement =
@@ -23,7 +23,9 @@ export function parseDescription(desc: string): DescriptionElement[] {
 
     // check the type of the matched segment
     if (match[2] === "photo" || match[2] === "post") {
-      segments.push({ linktype: match[2], id: parseInt(match[3]) });
+      const linktype = match[2];
+      const id = parseInt(match[3]!);
+      segments.push({ linktype, id });
     } else if (match[4] === "coords") {
       segments.push({ linktype: match[4], latlng: match[5] });
     }

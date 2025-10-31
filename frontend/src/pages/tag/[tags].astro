@@ -31,8 +31,13 @@ for (const post of posts) {
     const photoTags = await getEntries(photo.tags);
 
     for (const pt of photoTags) {
-      tagsMap[pt.id].total++;
-      if (tagsMap[pt.id].active) {
+      const tag = tagsMap[pt.id];
+      if (tag === undefined) {
+        throw `tag ${pt.id} not found!`;
+      }
+
+      tag.total++;
+      if (tag.active) {
         filteredPhotos.push(photo);
       }
     }
