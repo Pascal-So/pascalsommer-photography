@@ -8,6 +8,7 @@ import {
   serializePlain,
   parseDescription,
   escapeHtml,
+  generateLink,
 } from "../../utils.ts";
 import Layout from "../../layouts/Layout.astro";
 import Left from "../../assets/left.svg";
@@ -51,13 +52,13 @@ const tags = await getEntries(photo.tags);
 
 const parsedDescription = parseDescription(photo.description);
 
-const permalink = `/photos/${photo.id}`;
+const permalink = generateLink.photo(photo.id);
 ---
 
 <Layout>
   <h2 class="text-lg mb-2">
     <a href={permalink} title="permalink">#</a>
-    <a href={`/post/${post.id}`} class="stealth-link">
+    <a href={generateLink.post(post.id)} class="stealth-link">
       {post.data.name} - {formatDate(post.data.date)}</a
     >
   </h2>
@@ -70,7 +71,7 @@ const permalink = `/photos/${photo.id}`;
         </span>
       ) : (
         <a
-          href={`/photos/${previousPhotoId}`}
+          href={generateLink.photo(previousPhotoId)}
           class="nav-arrow"
           data-shortcut-key="ArrowLeft"
           title="shortcut: left arrow"
@@ -95,7 +96,7 @@ const permalink = `/photos/${photo.id}`;
         </span>
       ) : (
         <a
-          href={`/photos/${nextPhotoId}`}
+          href={generateLink.photo(nextPhotoId)}
           class="nav-arrow"
           data-shortcut-key="ArrowRight"
           title="shortcut: right arrow"
@@ -118,9 +119,9 @@ const permalink = `/photos/${photo.id}`;
               const link = `https://www.google.com/maps/?q=${el.latlng}&=Search%20Google%20Maps`;
               return <a href={link}>{el.latlng}</a>;
             } else if (el.linktype === "photo") {
-              return <a href={`/photos/${el.id}`}>{el.id}</a>;
+              return <a href={generateLink.photo(el.id)}>{el.id}</a>;
             } else {
-              return <a href={`/post/${el.id}`}>{el.id}</a>;
+              return <a href={generateLink.post(el.id)}>{el.id}</a>;
             }
           })
         }
@@ -129,7 +130,7 @@ const permalink = `/photos/${photo.id}`;
       <div class="tags">
         {
           tags.map((tag) => (
-            <Tag text={tag.id} url={`/tag/${tag.id}`} active={false} />
+            <Tag text={tag.id} url={generateLink.tag(tag.id)} active={false} />
           ))
         }
       </div>

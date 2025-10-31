@@ -3,7 +3,12 @@ import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 
-import { formatDate, serializePlain, parseDescription } from "../utils.ts";
+import {
+  generateLink,
+  formatDate,
+  serializePlain,
+  parseDescription,
+} from "../utils.ts";
 import { postsPerPage } from "../constants.ts";
 import Layout from "../layouts/Layout.astro";
 import ExternalPlatformIconLink from "../components/ExternalPlatformIconLink.astro";
@@ -90,7 +95,7 @@ const showTopNav = Astro.params.page?.includes("page");
       <div>
         <h2 class="mt-5" id={`post-${post.id}`}>
           <span title="permalink">
-            <a href={`/post/${post.id}`}>#</a>
+            <a href={generateLink.post(post.id)}>#</a>
           </span>{" "}
           {post.data.name} - {formatDate(post.data.date)}
         </h2>
@@ -98,7 +103,7 @@ const showTopNav = Astro.params.page?.includes("page");
         {post.data.photos.map((photo) => (
           <>
             <a
-              href={`/photos/${photo.id}`}
+              href={generateLink.photo(photo.id)}
               title={photo.description}
               class="photo"
             >

@@ -13,11 +13,13 @@ const ids = JSON.stringify(photos.map(photo => photo.id));
 </Layout>
 
 <script>
+  import { generateLink } from "../../utils.ts";
+
   const el = document.getElementById("redirect-content")!;
   const ids = JSON.parse(el.dataset.ids!);
   const id = ids[Math.floor(Math.random() * ids.length)];
   const loc = document.location;
-  const link = `${loc.protocol}//${loc.host}/photos/${id}`;
+  const link = `${loc.protocol}//${loc.host}${generateLink.photo(id)}`;
   el.innerHTML = `redirecting to <a href="${link}">${link}</a>...`;
   window.location.replace(link);
 </script>

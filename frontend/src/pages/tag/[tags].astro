@@ -5,6 +5,7 @@ import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import Tag from "../../components/Tag.astro";
 import Header from "../../components/Header.astro";
+import { generateLink } from "../../utils.ts";
 
 export async function getStaticPaths() {
   const tags = await getCollection("tags");
@@ -56,7 +57,7 @@ const tags = Object.values(tagsMap).sort((a, b) => a.order - b.order);
       tags.map((tag) => (
         <Tag
           text={`${tag.name} (${tag.total})`}
-          url={`/tag/${tag.name}`}
+          url={generateLink.tag(tag.name)}
           active={tag.active}
         />
       ))
@@ -68,7 +69,7 @@ const tags = Object.values(tagsMap).sort((a, b) => a.order - b.order);
   >
     {
       filteredPhotos.map((photo) => (
-        <a href={`/photos/${photo.id}`}>
+        <a href={generateLink.photo(photo.id)}>
           <Image
             src={photo.img}
             alt={photo.description}

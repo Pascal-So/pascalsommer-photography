@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 
 import { postsPerPage } from "../../constants.ts";
+import { generateLink } from "../../utils.ts";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
@@ -14,7 +15,7 @@ export async function getStaticPaths() {
 
 const { page } = Astro.props;
 const { id } = Astro.params;
-const target = `/page/${page}#post-${id}`;
+const target = generateLink.page(page, `post-${id}`);
 ---
 
 <Layout>

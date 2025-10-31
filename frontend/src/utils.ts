@@ -61,8 +61,15 @@ export function escapeHtml(unsafe: string) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-};
+}
 
 export function nl2br(string: string) {
   return string.replace(/\n/g, "<br>");
+}
+
+export const generateLink = {
+  photo: (id: number) => `/photos/${id}`,
+  post: (id: string | number) => `/post/${id}`,
+  page: (page: number, anchor: string) => `/page/${page}#${anchor}`,
+  tag: (name: string) => `/tag/${name}`,
 };
