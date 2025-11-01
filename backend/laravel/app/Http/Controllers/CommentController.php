@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Crypt;
 use App\Photo;
 use App\Comment;
 use App\Blacklist;
@@ -29,6 +30,67 @@ class CommentController extends Controller
                             JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 
         Log::info(($blocked ? 'Blocked comment: ' : 'New comment: ') . $json);
+    }
+
+    private function generateToken(Int $photoId, Bool $yesterday)
+    {
+        $date = new \DateTime();
+        if ($yesterday) {
+            $date->sub(new \DateInterval("P1D"));
+        }
+
+        return hash('sha256', strval($photoId) . '-' . $date->format("Y-m-d"));
+    }
+
+    public function commentToken(Photo $photo)
+    {
+        return response()->json([
+            'token' => $this->generateToken($photo->id, false)
+        ]);
+    }
+
+    public function submitApiComment(Photo $photo, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:' . strval(config('constants.max_comment_author_length')),
+            'comment' => 'required|max:' . strval(config('constants.max_comment_length')),
+            '_token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['errors' => $errors->all()], 400);
+        }
+
+        $token = $request->input('_token');
+        if ($token !== $this->generateToken($photo->id, false) && $token !== $this->generateToken($photo->id, true)) {
+            return response()->json(['errors' => ["invalid token"]], 400);
+        }
+
+
+        if (!Blacklist::checkComment($request->comment)) {
+            $this->logComment($request->name, $request->comment, $photo, false, true);
+
+            return response()->json(null, 200);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => [new NoHTML],
+            'comment' => [new NoHTML],
+        ]);
+
+        if ($validator->fails()) {
+            $this->logComment($request->name, $request->comment, $photo, false, true);
+
+            $errors = $validator->errors();
+            return response()->json(['errors' => $errors->all()], 400);
+        }
+
+        $photo->comments()->create($request->only(['name', 'comment']));
+
+        // $this->logComment($request->name, $request->comment, $photo, true);
+
+        return response()->json(null, 200);
     }
 
     public function postComment(Photo $photo, Request $request)

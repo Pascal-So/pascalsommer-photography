@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/photos/{photo}/comments', 'CommentController@list');
+Route::post('/photos/{photo}/comment', 'CommentController@submitApiComment');
+Route::get('/photos/{photo}/commenttoken', 'CommentController@commentToken');

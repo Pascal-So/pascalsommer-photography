@@ -9,6 +9,9 @@ import react from "@astrojs/react";
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      assetsInlineLimit: 1024 * 8,
+    }
   },
 
   prefetch: true,
