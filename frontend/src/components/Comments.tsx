@@ -8,7 +8,7 @@ export type CommentsProps = {
   photo: number;
 };
 
-type CommentsState = "loading" | "reloading" | "error" | [any];
+type CommentsState = "loading" | "reloading" | "error" | [{id: number, name: string, comment: string, created_at: string}];
 
 export default function Comments({ backendUrl, photo }: CommentsProps) {
   const [comments, setComments] = useState<CommentsState>("loading");
