@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+:root {
+  font-size: 1rem;
+}
+@media (max-width: 600px) {
+  :root {
+    font-size: 0.85rem;
+  }
+}
+
 /* PT Mono was designed by Alexandra Korolkova with participation of Isabella Chaeva and with the financial support of Google Web Fonts.
  * Licensed under the Open Font License
  */
