@@ -88,7 +88,7 @@ class CommentController extends Controller
 
         $photo->comments()->create($request->only(['name', 'comment']));
 
-        // $this->logComment($request->name, $request->comment, $photo, true);
+        $this->logComment($request->name, $request->comment, $photo, true);
 
         return response()->json(null, 200);
     }
