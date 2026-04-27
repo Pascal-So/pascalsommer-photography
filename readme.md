@@ -15,3 +15,11 @@ The Storage Service is implemented in Laravel, using a MySQL database. The main 
 While the Laravel version was fine as it was, I did sometimes run into downtimes where the database was unreachable, or the PHP server was not reliable, due to what I assume to be maintenance work by my webhost. This lead me to explore an architectore with zero server-logic.
 
 This architecture is subject to change.
+
+## Usage Notes
+
+For now the publishing process happens via a `justfile`: first we pull a backup
+of the admin server, then start that backup in a local instance of the admin
+backend, then run the generator which fetches content from the local mysql db,
+then publish the generated static website via rsync. TODO: bundle this up into
+a standalone service that can run on a VPS.

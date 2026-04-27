@@ -2,10 +2,10 @@ services:
   backend:
     image: php-backend
     volumes:
-      - ${SERVER_DATA_ROOT}/img/photos:/var/www/html/img/photos
-      - ${SERVER_DATA_ROOT}/img/thumbs:/var/www/html/img/thumbs
+      - ${ADMIN_DATA_ROOT}/img/photos:/var/www/html/img/photos
+      - ${ADMIN_DATA_ROOT}/img/thumbs:/var/www/html/img/thumbs
       - type: bind
-        source: ${SERVER_DATA_ROOT}/.env 
+        source: ${ADMIN_DATA_ROOT}/.env
         target: /var/www/html/laravel/.env
         read_only: true
         bind:

@@ -3,7 +3,7 @@ import { defineCollection, reference, z } from "astro:content";
 import mysql, { type ConnectionOptions } from "mysql2/promise";
 import fs from "node:fs/promises";
 
-const importFromDB = false;
+const importFromDB = true;
 if (importFromDB) {
   const connOptions: ConnectionOptions = {
     user: import.meta.env.DB_USER,
@@ -40,7 +40,9 @@ if (importFromDB) {
         id: photo.id,
         description: photo.description,
         img: `/src/data/real-data/img/${photo.path}`,
-        tags: photosTags.filter((pt) => pt.photo_id === photo.id).map((pt) => tagsMap[pt.tag_id].id),
+        tags: photosTags
+          .filter((pt) => pt.photo_id === photo.id)
+          .map((pt) => tagsMap[pt.tag_id].id),
       });
     }
   }
